@@ -34,8 +34,16 @@ void mainGame();
 void NameWordEntry(string &, string &);
 bool wordGood(string);
 
+//CONSTANTS...
+const int FILESIZE = 501;
+
+//Files
+ifstream words;
+
 int main()
 {
+    //words.open("ComputerWords.txt");
+
     cout << "Welcome to Word Game!\n";
     intro();
     return 0;
@@ -78,16 +86,32 @@ void mainGame()
     NameWordEntry(p1Name, p1Word);
     NameWordEntry(p2Name, p2Word);
 
-    
-
 }
 
 bool wordGood(string word)
 {
+
     if(word.length() == 4)
     {
+        string temp;
         
-        return true;
+        words.open("AvailableWords.txt");
+
+        for(int i = 0; i < FILESIZE; i++)
+        {
+            getline(words, temp);
+            
+            cout << temp << endl;
+            //std::toupper(temp);
+            
+            if(word[0] == temp[0] && word[1] == temp[1] && word[2] == temp[2] && word[3] == temp[3])
+            {
+                words.close();
+                return true;
+            }
+        }
+        words.close();
+        return false;
     }
     else
     {
@@ -105,6 +129,12 @@ void NameWordEntry(string & name, string & word)
     do{
         cout << name << ", enter your secret four letter word.\n";
         cin >> word;
+
+        for(int i = 0; i < word.length(); i++)
+        {
+            word[i] = toupper(word[i]);
+        }
+        cout << word << endl;
         temp = wordGood(word);
     }while(temp == false);
 
