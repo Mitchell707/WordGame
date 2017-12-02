@@ -32,6 +32,7 @@ void intro();
 void help();
 void mainGame();
 void NameWordEntry(string &, string &);
+bool wordGood(string);
 
 int main()
 {
@@ -81,11 +82,30 @@ void mainGame()
 
 }
 
+bool wordGood(string word)
+{
+    if(word.length() == 4)
+    {
+        
+        return true;
+    }
+    else
+    {
+        cout << "Your word was not four letters." << endl;
+        return false;
+    }
+}
+
 void NameWordEntry(string & name, string & word)
 {
+    bool temp = false;
     cout << name << ", enter your name.\n";
     cin >> name;
 
-    cout << name << ", enter your secret word.\n";
-    cin >> word;
+    do{
+        cout << name << ", enter your secret four letter word.\n";
+        cin >> word;
+        temp = wordGood(word);
+    }while(temp == false);
+
 }
