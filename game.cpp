@@ -4,6 +4,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <stdlib.h>
+#include "alphabet.h"
 
 using namespace std;
 
@@ -54,12 +55,21 @@ int wordCompare(string);
 const int FILESIZE = 5369;
 const int TurnLimit = 5;
 
-//Files
+//Files...
 ifstream words;
 
+//Class...
+alphabet al;
+
 int main()
-{   
+{  
     system("clear");
+   
+    al.setStrings();
+    al.setArray();
+    al.printAlphabet();
+
+    //system("clear");
     
     turns = 0;
 
@@ -75,8 +85,6 @@ int main()
         p2Words[i] = "__________";
 
     }
-
-    //words.open("ComputerWords.txt");
 
     cout << "Welcome to Word Game!\n";
     intro();
@@ -174,25 +182,13 @@ void wordEnter()
     
     }
     
-    //cout << "I" << endl;
-
     if(wordGood(guess))
     {
         if(turns % 2 == 0)
         {
-            /*
-            p1Words[p1Turns].append(" ");
-            p1Words[p1Turns].append(guess);
-            p1Words[p1Turns].append(" - ");
-            string temp = to_string(wordCompare(guess));
-            p1Words[p1Turns].append(temp);
-            p1Words[p1Turns].append(" ");
-            */
             p1Words[p1Turns] = guess;
             p1Num[p1Turns] = wordCompare(guess);
             
-            //cout << endl << endl << p1Words[p1Turns] << endl << endl; 
-
             p1Turns++;
         }
         else
@@ -346,10 +342,7 @@ bool wordGood(string word)
         for(int i = 0; i < FILESIZE; i++)
         {
             getline(words, temp);
-            
-            //cout << temp << endl;
-            //std::toupper(temp);
-            
+                    
             if(word[0] == temp[0] && word[1] == temp[1] && word[2] == temp[2] && word[3] == temp[3])
             {
                 words.close();
@@ -382,9 +375,9 @@ void NameWordEntry(string & name, string & word)
         {
             word[i] = toupper(word[i]);
         }
-        //cout << word << endl;
+        
         temp = wordGood(word);
-        //system("clear");
+        
     }while(temp == false);
 
     if(name.length() > 10)
