@@ -50,7 +50,7 @@ bool wordGood(string);
 int wordCompare(string);
 
 //CONSTANTS...
-const int FILESIZE = 504;
+const int FILESIZE = 5369;
 const int TurnLimit = 20;
 
 //Files
@@ -108,8 +108,20 @@ void intro()
 }
 
 void help()
-{
-    cout << "Tutorial" << endl;
+{   
+    system("clear");
+    cout << "Welcome to Word Game!" << endl;
+    cout << "Word Game is a word based, deductive logic game in which both players choose a four letter word and try to guess their opponents word before their word is discovered." << endl << endl;
+    cout << "Here's how to play." << endl;
+    cout << "Input your name and then your four letter word as prompted." << endl;
+    cout << "To start the game you will input a four letter word as a guess to what your opponents word is. A number will be shown between 0 and 4 next to your guess." << endl;
+    cout << "The number next to the guess is how many letters of your guess are in the word you are trying to discover." << endl;
+    cout << "For example if one player's word was MEAN and they're opponent guessed MAKE, the number reported would be 2 because M and E are contained in both words." << endl;
+    cout << "If a word has a double letter such as TOOL and the other player guesses SOAK the number reported would be 2 because the O in SOAK matches with both Os in the word TOOL" << endl;
+    cout << "You use the number reported to deduce what letters are possible, probable or unlikely to be in your opponents word." << endl; 
+    cout << "Both players will continue guessing until one player discovers their opponents, or until " << TurnLimit << " rounds have been completed which will result in a draw/tie." << endl;
+    cout << "It is very helpful to have the alphabet written out so you can mark certain letters depending on the number reported." << endl << endl;
+    
     intro();
 }
 
@@ -300,7 +312,7 @@ bool wordGood(string word)
     {
         string temp;
         
-        words.open("AvailableWords.txt");
+        words.open("WordGamePossibleWords.txt");
 
         for(int i = 0; i < FILESIZE; i++)
         {
