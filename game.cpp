@@ -45,13 +45,14 @@ void mainGame();
 void wordEnter();
 void NameWordEntry(string &, string &);
 void printGame();
+void draw();
 void Winner(string);
 bool wordGood(string);
 int wordCompare(string);
 
 //CONSTANTS...
 const int FILESIZE = 5369;
-const int TurnLimit = 20;
+const int TurnLimit = 5;
 
 //Files
 ifstream words;
@@ -60,6 +61,8 @@ int main()
 {   
     system("clear");
     
+    turns = 0;
+
     p1Words.resize(TurnLimit);
     p2Words.resize(TurnLimit);
 
@@ -143,15 +146,26 @@ void wordEnter()
     
     if(turns % 2 == 0)
     {
-        player = p1Name;
+        player = p1Name;        
         
     }
     else
     {
         player = p2Name;
+
+    }
+    
+    cout << turns << endl;
+
+    if(turns > (TurnLimit * 2) - 3)
+    {
+        cout << player << ", this is your last chance to guess your opponents word." << endl << "Enter your final guess." << endl;
+    }
+    else
+    {
+        cout << player << " enter your guess for your oppenents word." << endl;
     }
 
-    cout << player << " enter your guess for your oppenents word." << endl;
     cin >> guess;
 
     for(int i = 0; i < guess.length(); i++)
@@ -194,6 +208,11 @@ void wordEnter()
         if(!done)
         {
             printGame();
+        }
+
+        if(turns == (TurnLimit * 2))
+        {
+            draw();
         }
     }
     else
@@ -248,6 +267,16 @@ void printGame()
         }
 }
 
+void draw()
+{
+    cout << "The game has concluded in a draw." << endl << endl;
+    cout << p1Name << ": " << p1Word << endl;
+    cout << p2Name << ": " << p2Word << endl << endl;
+    
+    done = true;
+
+}
+
 int wordCompare(string guess)
 {
     int matched = 0;
@@ -293,7 +322,7 @@ int wordCompare(string guess)
 
 void Winner(string winner)
 {
-    string response;
+    //string response;
     cout << "Congratulations " << winner << ", you have won!" << endl << endl;
     cout << p1Name << ": " << p1Word << endl;
     cout << p2Name << ": " << p2Word << endl << endl;
@@ -353,7 +382,7 @@ void NameWordEntry(string & name, string & word)
         {
             word[i] = toupper(word[i]);
         }
-        cout << word << endl;
+        //cout << word << endl;
         temp = wordGood(word);
         //system("clear");
     }while(temp == false);
