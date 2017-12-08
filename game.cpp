@@ -3,11 +3,19 @@
 #include <vector>
 #include <fstream>
 #include <cstdlib>
+#include <stdlib.h>
 
 using namespace std;
 
 //int...
 int introNum = 0;
+
+int turns = 0;
+int p1Turns = 0;
+int p2Turns = 0;
+
+//Bool...
+bool done = false;
 
 //Strings...
 string guess = "";
@@ -27,21 +35,44 @@ vector < char > alphabetTwo;
 vector < string > p1Words;
 vector < string > p2Words;
 
+vector < int > p1Num;
+vector < int > p2Num;
+
 //Prototypes...
 void intro();
 void help();
 void mainGame();
+void wordEnter();
 void NameWordEntry(string &, string &);
+void printGame();
+void Winner(string);
 bool wordGood(string);
+int wordCompare(string);
 
 //CONSTANTS...
-const int FILESIZE = 501;
+const int FILESIZE = 504;
+const int TurnLimit = 20;
 
 //Files
 ifstream words;
 
 int main()
-{
+{   
+    system("clear");
+    
+    p1Words.resize(TurnLimit);
+    p2Words.resize(TurnLimit);
+
+    p1Num.resize(TurnLimit);
+    p2Num.resize(TurnLimit);
+
+    for( int i = 0; i < TurnLimit; i++)
+    {
+        p1Words[i] = "__________";
+        p2Words[i] = "__________";
+
+    }
+
     //words.open("ComputerWords.txt");
 
     cout << "Welcome to Word Game!\n";
@@ -59,6 +90,7 @@ void intro()
 
         if(introCin == "1")
         {
+            system("clear");
             mainGame();
             loopBreak = true;
         }
@@ -85,11 +117,184 @@ void mainGame()
 {
     NameWordEntry(p1Name, p1Word);
     NameWordEntry(p2Name, p2Word);
+    
+    printGame();
 
+    do{
+        wordEnter();
+    }while(!done);
+}
+
+void wordEnter()
+{
+    string player;
+    
+    if(turns % 2 == 0)
+    {
+        player = p1Name;
+        
+    }
+    else
+    {
+        player = p2Name;
+    }
+
+    cout << player << " enter your guess for your oppenents word." << endl;
+    cin >> guess;
+
+    for(int i = 0; i < guess.length(); i++)
+    {
+        guess[i] = toupper(guess[i]);
+    
+    }
+    
+    //cout << "I" << endl;
+
+    if(wordGood(guess))
+    {
+        if(turns % 2 == 0)
+        {
+            /*
+            p1Words[p1Turns].append(" ");
+            p1Words[p1Turns].append(guess);
+            p1Words[p1Turns].append(" - ");
+            string temp = to_string(wordCompare(guess));
+            p1Words[p1Turns].append(temp);
+            p1Words[p1Turns].append(" ");
+            */
+            p1Words[p1Turns] = guess;
+            p1Num[p1Turns] = wordCompare(guess);
+            
+            //cout << endl << endl << p1Words[p1Turns] << endl << endl; 
+
+            p1Turns++;
+        }
+        else
+        {
+            p2Words[p2Turns] = guess;
+            p2Num[p2Turns] = wordCompare(guess);
+            p2Turns++;
+        }
+        
+        turns++;
+
+        //PRINTS OUT GAME "SCREEN"...
+        if(!done)
+        {
+            printGame();
+        }
+    }
+    else
+    {
+        wordEnter();
+    }
+}
+        
+void printGame()
+{
+    system("clear");
+    cout << p1Name;
+        for(int i = 0; i < 10 - p1Name.length(); i++)
+        {
+            cout << " ";
+
+        }
+
+        cout << "|";
+
+        for(int i = 0; i < 10 - p2Name.length(); i++)
+        {
+            cout << " ";
+
+        }
+        
+        cout << p2Name << endl;
+        
+        cout << "==========|==========" << endl;
+
+        for( int i = 0; i < TurnLimit; i++)
+        {
+            if(p1Words[i] != "__________")
+            {
+                cout << " " << p1Words[i] << " - " << p1Num[i] << " |";
+            }
+            else
+            {
+                cout << p1Words[i] << "|";
+            }
+            
+            if(p2Words[i] != "__________")
+            {   
+                cout << " " << p2Words[i] << " - " << p2Num[i] << " " << endl;
+            
+            }
+            else
+            {
+                cout << p2Words[i] << endl;
+            
+            }
+        }
+}
+
+int wordCompare(string guess)
+{
+    int matched = 0;
+
+    if(turns % 2 == 0)
+    {
+        for(int i = 0; i < 4; i++)
+        {
+            if(guess[i] == p2Word[0] || guess[i] == p2Word[1] || guess[i] == p2Word[2] || guess[i] == p2Word[3])
+            {
+                matched++;
+
+            }
+        }
+        
+        if(guess[0] == p2Word[0] && guess[1] == p2Word[1] && guess[2] == p2Word[2] && guess[3] == p2Word[3])
+        {
+             Winner(p1Name);
+        }
+        
+    }
+    else
+    {
+        for(int i = 0; i < 4; i++)
+        {
+            if(guess[i] == p1Word[0] || guess[i] == p1Word[1] || guess[i] == p1Word[2] || guess[i] == p1Word[3])
+            {
+                matched++;
+
+            }
+        }
+
+        if(guess[0] == p1Word[0] && guess[1] == p1Word[1] && guess[2] == p1Word[2] && guess[3] == p1Word[3])
+        {
+            Winner(p2Name);
+
+        }
+    }
+
+    return matched;
+
+}
+
+void Winner(string winner)
+{
+    string response;
+    cout << "Congratulations " << winner << ", you have won!" << endl << endl;
+    cout << p1Name << ": " << p1Word << endl;
+    cout << p2Name << ": " << p2Word << endl << endl;
+
+    done = true;
 }
 
 bool wordGood(string word)
 {
+    for (int i = 0; i < word.length(); i++)
+    {
+        word[i] = toupper(word[i]);
+    } 
 
     if(word.length() == 4)
     {
@@ -101,7 +306,7 @@ bool wordGood(string word)
         {
             getline(words, temp);
             
-            cout << temp << endl;
+            //cout << temp << endl;
             //std::toupper(temp);
             
             if(word[0] == temp[0] && word[1] == temp[1] && word[2] == temp[2] && word[3] == temp[3])
@@ -111,6 +316,7 @@ bool wordGood(string word)
             }
         }
         words.close();
+        cout << "Word not found in Word Game Library." << endl;
         return false;
     }
     else
@@ -122,6 +328,7 @@ bool wordGood(string word)
 
 void NameWordEntry(string & name, string & word)
 {
+    system("clear");
     bool temp = false;
     cout << name << ", enter your name.\n";
     cin >> name;
@@ -136,6 +343,20 @@ void NameWordEntry(string & name, string & word)
         }
         cout << word << endl;
         temp = wordGood(word);
+        //system("clear");
     }while(temp == false);
 
+    if(name.length() > 10)
+    {
+        string temp = name;
+        name = "";
+        name.resize(10);
+
+        for(int i = 0; i < 10; i++)
+        {
+            name[i] = temp[i];
+
+        }
+    }
+    system("clear");
 }
