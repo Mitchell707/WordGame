@@ -28,6 +28,15 @@ string p1Word = "";
 string p2Word = "";
 
 string introCin = "";
+string alCin = "";
+
+string p1Pos;
+string p1Un;
+string p1Prob;
+
+string p2Pos;
+string p2Un;
+string p2Prob;
 
 //Vectors...
 vector < char > alphabetOne;
@@ -48,29 +57,33 @@ void NameWordEntry(string &, string &);
 void printGame();
 void draw();
 void Winner(string);
+void p1AlphabetEdit();
+void p2AlphabetEdit();
+void printAlphabet();
 bool wordGood(string);
 int wordCompare(string);
 
 //CONSTANTS...
 const int FILESIZE = 5369;
-const int TurnLimit = 5;
+const int TurnLimit = 20;
 
 //Files...
 ifstream words;
 
 //Class...
-alphabet al;
+alphabet p1al;
+alphabet p2al;
 
 int main()
 {  
     system("clear");
    
-    al.setStrings();
-    al.setArray();
-    al.printAlphabet();
+    p1al.setStrings(p1Pos, p1Un, p1Prob);
+    p1al.setArray(p1al.Letters);
 
-    //system("clear");
-    
+    p2al.setStrings(p2Pos, p2Un, p2Prob);
+    p2al.setArray(p2al.Letters);
+
     turns = 0;
 
     p1Words.resize(TurnLimit);
@@ -130,14 +143,17 @@ void help()
     cout << "For example if one player's word was MEAN and they're opponent guessed MAKE, the number reported would be 2 because M and E are contained in both words." << endl;
     cout << "If a word has a double letter such as TOOL and the other player guesses SOAK the number reported would be 2 because the O in SOAK matches with both Os in the word TOOL" << endl;
     cout << "You use the number reported to deduce what letters are possible, probable or unlikely to be in your opponents word." << endl; 
+    cout << "You can keep track of the letters using the alphabet on the top of the screen." << endl;
+    cout << "You only need to select to arrange the alphabet, choose the single letter you would like to move then the number of the section you would like to move it to." << endl;
     cout << "Both players will continue guessing until one player discovers their opponents, or until " << TurnLimit << " rounds have been completed which will result in a draw/tie." << endl;
-    cout << "It is very helpful to have the alphabet written out so you can mark certain letters depending on the number reported." << endl << endl;
-    
+        
     intro();
 }
 
 void mainGame()
 {
+    string temp;
+
     NameWordEntry(p1Name, p1Word);
     NameWordEntry(p2Name, p2Word);
     
@@ -146,12 +162,25 @@ void mainGame()
     do{
         wordEnter();
     }while(!done);
+
+
+    cout << "Would you like to play again?" << endl << "Yes or No?" << endl;
+    cin >> temp;
+
+
+    if(temp == "yes" || temp == "Yes" || temp == "YES")
+    {
+        system("g++ game.cpp alphabet.cpp");
+        system("./a.out");
+
+    }
 }
 
 void wordEnter()
 {
     string player;
-    
+    //string temp;
+
     if(turns % 2 == 0)
     {
         player = p1Name;        
@@ -163,15 +192,13 @@ void wordEnter()
 
     }
     
-    cout << turns << endl;
-
     if(turns > (TurnLimit * 2) - 3)
     {
         cout << player << ", this is your last chance to guess your opponents word." << endl << "Enter your final guess." << endl;
     }
     else
     {
-        cout << player << " enter your guess for your oppenents word." << endl;
+        cout << player << ", enter your guess for your oppenents word." << endl;
     }
 
     cin >> guess;
@@ -198,9 +225,49 @@ void wordEnter()
             p2Turns++;
         }
         
+        if(!done)
+        {
+            printGame();
+        }
+        
+        if(!done)
+        {
+        
+        bool loop = true;
+
+            do{
+                do{
+            
+                    cout << "Would you like to edit your alphabet?" << endl;
+                    cout << "(Y)es or (N)o" << endl;
+                    cin >> alCin;
+
+                }while(alCin != "Y" && alCin != "y" && alCin != "N" && alCin != "n");
+
+                if(alCin == "Y" || alCin == "y")
+                {
+                    if(turns % 2 == 0)
+                    {
+                        p1AlphabetEdit();
+                    }
+                    else
+                    {
+                        p2AlphabetEdit(); 
+                    }
+
+                    printGame();
+
+                }
+                else
+                {
+                    loop = false;
+                }
+
+            }while(loop);
+        }
+
         turns++;
 
-        //PRINTS OUT GAME "SCREEN"...
         if(!done)
         {
             printGame();
@@ -216,10 +283,122 @@ void wordEnter()
         wordEnter();
     }
 }
+       
+void p1AlphabetEdit()
+{
+    char toChange;
+    string section;
+    bool temp = false;
+
+    do{
+        cout << "What letter would you like to move" << endl;
+        cin >> toChange;
         
+        toChange = toupper(toChange);
+        
+        for(int i = 0; i < p1al.Letters.size(); i++)
+        {
+            if(toChange == p1al.Letters[i])
+            {
+                temp = true;
+                p1al.letterNum = i;
+            }
+        }
+
+        if(!temp)
+        {
+            cout << "Please enter a letter." << endl;
+        }
+         
+    }while(!temp);
+
+    do{
+        cout << "Enter the number of the section would you like to move " << toChange << "?" << endl;
+        cout << "1) Possible" << endl << "2) Unlikely" << endl << "3) Probable" << endl;
+        cin >> section;
+    
+    }while(section != "1" && section != "2" && section != "3");
+    
+    p1al.letterArrange(section, toChange, p1al.Letters, p1Pos, p1Un, p1Prob);
+    printGame();
+}
+
+void p2AlphabetEdit()
+{
+    char toChange;
+    string section;
+    bool temp = false;
+
+    do{
+        cout << "What letter would you like to move" << endl;
+        cin >> toChange;
+
+        toChange = toupper(toChange);
+
+        for(int i = 0; i < p2al.Letters.size(); i++)
+        {
+            if(toChange == p2al.Letters[i])
+            {
+               temp = true;
+               p2al.letterNum = 1;
+            }                                                                                   
+        }  
+
+        if(!temp)
+        {
+            cout << "Please enter a letter." << endl;
+        }
+
+    }while(!temp);
+   
+   do{
+        cout << "Enter the number of the section would you like to move " << toChange << "?" << endl;
+        cout << "1) Possible" << endl << "2) Unlikely" << endl << "3) Probable" << endl;
+       
+        cin >> section;
+   
+   }while(section != "1" && section != "2" && section != "3");
+
+    p2al.letterArrange(section, toChange, p2al.Letters, p2Pos, p2Un, p2Prob);
+    
+    printGame();    
+}
+
+void printAlphabet()
+{
+    if(turns % 2 == 0)
+    {
+        cout << "Possible:" << p1Pos << endl;
+        cout << "Unlikely:" << p1Un << endl;
+        cout << "Probable:" << p1Prob << endl;
+
+    }
+    else
+    {
+        cout << "Possible:" << p2Pos << endl;
+        cout << "Unlikely:" << p2Un << endl;
+        cout << "Probable:" << p2Prob << endl;
+    }
+
+    cout << endl;
+
+}
+
 void printGame()
 {
     system("clear");
+
+    if(turns % 2 == 0)
+    {
+        printAlphabet();
+
+    }
+    else
+    {
+        printAlphabet();
+
+    }
+
     cout << p1Name;
         for(int i = 0; i < 10 - p1Name.length(); i++)
         {
@@ -261,6 +440,9 @@ void printGame()
             
             }
         }
+        
+        cout << endl;
+
 }
 
 void draw()

@@ -1,80 +1,77 @@
 #include <iostream>
+#include <vector>
 #include "alphabet.h"
 
 using namespace std;
 
 alphabet alph;
 
-void alphabet::setStrings()
+void alphabet::setStrings(string & pos, string & un, string & prob)
 {
-    alph.possible = " A B C D E F G H I K L M N O P Q R S T U V W X Y Z";
-    alph.unlikely = "                                                  ";
-    alph.probable = "                                                  ";
+    pos = " A B C D E F G H I J K L M N O P Q R S T U V W X Y Z";
+    un = "                                                    ";
+    prob = "                                                    ";
 }
 
-void alphabet::setArray()
-{   
-    alph.Letters.resize(25);
+void alphabet::setArray(vector<char> & arr)
+{
+    arr.resize(26);
 
-    alph.Letters[0] = 'A';
-    alph.Letters[1] = 'B';
-    alph.Letters[2] = 'C';
-    alph.Letters[3] = 'D';
-    alph.Letters[4] = 'E';
-    alph.Letters[5] = 'F';
-    alph.Letters[6] = 'G';
-    alph.Letters[7] = 'H';  
-    alph.Letters[8] = 'I';
-    alph.Letters[9] = 'J';
-    alph.Letters[10] = 'K';
-    alph.Letters[11] = 'L';
-    alph.Letters[12] = 'M';
-    alph.Letters[13] = 'N';
-    alph.Letters[14] = 'O';
-    alph.Letters[15] = 'P';
-    alph.Letters[16] = 'Q';
-    alph.Letters[17] = 'R';
-    alph.Letters[18] = 'S';
-    alph.Letters[19] = 'T';
-    alph.Letters[20] = 'U';
-    alph.Letters[21] = 'V';
-    alph.Letters[22] = 'W';
-    alph.Letters[23] = 'X';
-    alph.Letters[24] = 'Y';
-    alph.Letters[25] = 'Z';
+    arr[0] = 'A';
+    arr[1] = 'B';
+    arr[2] = 'C';
+    arr[3] = 'D';
+    arr[4] = 'E';
+    arr[5] = 'F';
+    arr[6] = 'G';
+    arr[7] = 'H';  
+    arr[8] = 'I';
+    arr[9] = 'J';
+    arr[10] = 'K';
+    arr[11] = 'L';
+    arr[12] = 'M';
+    arr[13] = 'N';
+    arr[14] = 'O';
+    arr[15] = 'P';
+    arr[16] = 'Q';
+    arr[17] = 'R';
+    arr[18] = 'S';
+    arr[19] = 'T';
+    arr[20] = 'U';
+    arr[21] = 'V';
+    arr[22] = 'W';
+    arr[23] = 'X';
+    arr[24] = 'Y';
+    arr[25] = 'Z';
 
 }
 
-void alphabet::letterArrange(string section, char lett)
+void alphabet::letterArrange(string section, char lett, vector<char> arr, string & pos, string & un, string & prob)
 {
     for(int i = 0; i < 26; i++)
     {
-        if(alph.Letters[i] = lett)
+        if(arr[i] == lett)
         {
             alph.letterNum = i;
+
         }
     }
-    
-    alph.possible[alph.letterNum * 2] = ' ';
-    alph.unlikely[alph.letterNum * 2] = ' ';
-    alph.probable[alph.letterNum * 2] = ' ';
+   
+    pos[(alph.letterNum * 2) + 1] = ' ';
+    un[(alph.letterNum * 2) + 1] = ' ';
+    prob[(alph.letterNum * 2) + 1] = ' ';
 
+ 
     if(section == "1")
     {
-        alph.possible[alph.letterNum * 2] = alph.Letters[alph.letterNum];
+        pos[(alph.letterNum * 2) + 1] = arr[alph.letterNum];
     }
     else if(section == "2")
     {
-        alph.unlikely[alph.letterNum * 2] = alph.Letters[alph.letterNum];
+        un[(alph.letterNum * 2) + 1] = arr[alph.letterNum];
     }
     else if(section == "3")
     {
-        alph.probable[alph.letterNum * 2] = alph.Letters[alph.letterNum];
+        prob[(alph.letterNum * 2) + 1] = arr[alph.letterNum];
     }
-}
-
-void alphabet::printAlphabet()
-{
-    cout << "Possible:" << alph.possible << endl << "Unlikely:" << alph.unlikely << endl << "Probable:" << alph.probable << endl;
-
 }
